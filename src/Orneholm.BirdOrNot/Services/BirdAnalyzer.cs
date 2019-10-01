@@ -14,13 +14,15 @@ namespace Orneholm.BirdOrNot.Services
         private readonly ComputerVisionClient _computerVisionClient;
         private static readonly List<VisualFeatureTypes> VisualFeatures = new List<VisualFeatureTypes>
         {
-            VisualFeatureTypes.Categories,
-            VisualFeatureTypes.Description,
-            VisualFeatureTypes.ImageType,
+            // 13.106 SEK / 1000 transactions
             VisualFeatureTypes.Adult,
-            VisualFeatureTypes.Color,
-            VisualFeatureTypes.Objects
+            VisualFeatureTypes.Objects,
+
+            // 21.843 SEK / 1000 transactions
+            VisualFeatureTypes.Description
         };
+
+        //Total: 0,048055 SEK / image
 
         public BirdAnalyzer(IOptions<BirdAnalysisOptions> birdAnalysisOptions)
         {
@@ -61,8 +63,7 @@ namespace Orneholm.BirdOrNot.Services
                 Metadata = new BirdAnalysisMetadata
                 {
                     ImageDescription = analyzedImage.Description?.Captions?.FirstOrDefault()?.Text,
-                    ImageTags = analyzedImage.Description?.Tags.ToList(),
-                    ImageAccentColor = analyzedImage.Color.AccentColor
+                    ImageTags = analyzedImage.Description?.Tags.ToList()
                 }
             };
         }

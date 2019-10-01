@@ -6,6 +6,5 @@ namespace Orneholm.BirdOrNot.Models
     {
         public List<string> ImageTags { get; set; }
         public string ImageDescription { get; set; }
-        public string ImageAccentColor { get; set; }
     }
 }

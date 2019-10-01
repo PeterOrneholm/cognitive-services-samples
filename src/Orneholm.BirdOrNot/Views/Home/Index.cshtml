@@ -57,7 +57,7 @@
                     {
                         <div class="card-body">
                             <p class="card-text">
-                                According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services (Computer Vision)</a> the image contains a bird (@($"{result.IsBirdConfidence:P1}") confidence).
+                                According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services</a> the image contains a bird (@($"{result.IsBirdConfidence:P1}") confidence).
                                 @if (result.Birds.Count > 1)
                                 {
                                     <text>It even contains multiple birds (@result.Birds.Count to be exact). See a list of them below.</text>
@@ -77,13 +77,13 @@
                                 </dd>
                             </dl>
 
-                            <dl class="row">
+                            <dl class="row mb-0">
                                 @for (var i = 0; i < result.Birds.Count; i++)
                                 {
                                     var bird = result.Birds[i];
                                     <dt class="col-sm-3">Bird @(i + 1)</dt>
                                     <dd class="col-sm-9">
-                                        <dl class="row">
+                                        <dl class="row mb-0">
                                             <dt class="col-sm-3 font-weight-normal">Species</dt>
                                             @if (bird.BirdSpiecies != null)
                                             {
@@ -108,7 +108,7 @@
                     else
                     {
                         <div class="card-body">
-                            <p class="card-text">According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services (Computer Vision)</a> the image does not contain a bird...</p>
+                            <p class="card-text">According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services</a> the image does not contain a bird...</p>
                         </div>
                     }
                 </div>
@@ -119,11 +119,11 @@
 
 <footer class="mt-3">
     <p class="mb-2">
-        Inspired by <a href="https://xkcd.com/1425/" target="_blank">this XKCD about tasks</a>.
+        This website was inspired by <a href="https://xkcd.com/1425/" target="_blank">this XKCD about tasks</a>,<br />
+        but proving it's not &quot;virtually impossible&quot; anymore.
     </p>
-
     <p>
-        Using <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services (Computer Vision)</a> with a pre-trained model to detect birds.
+        Using <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services (Computer Vision)</a> to detect birds.
     </p>
     <p>
         Developed by <a href="https://twitter.com/PeterOrneholm" target="_blank">@@PeterOrneholm</a> as a demo for the session &quot;Democratizing AI with Azure Cognitive Services&quot;.

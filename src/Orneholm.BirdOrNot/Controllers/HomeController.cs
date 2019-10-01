@@ -19,6 +19,7 @@ namespace Orneholm.BirdOrNot.Controllers
             _telemetryClient = telemetryClient;
         }
 
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
         public async Task<ActionResult<BirdAnalysisResult>> Index(string imageUrl)
         {
             var viewModel = new HomeIndexViewModel
@@ -36,6 +37,7 @@ namespace Orneholm.BirdOrNot.Controllers
                     {
                         { "BON_ImageUrl", imageUrl },
                         { "BON_IsBird", result.IsBird.ToString() },
+                        { "BON_BirdCount", result.Birds.Count.ToString() },
                         { "BON_IsBirdConfidence", result.IsBirdConfidence.ToString() },
                         { "BON_ImageDescription", result.Metadata.ImageDescription },
                     });
