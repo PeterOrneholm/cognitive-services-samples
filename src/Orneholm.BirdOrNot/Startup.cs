@@ -22,7 +22,9 @@ namespace Orneholm.BirdOrNot
         {
             services.AddControllersWithViews();
             services.Configure<BirdAnalysisOptions>(Configuration);
+            services.Configure<GoogleAnalyticsOptions>(Configuration);
             services.AddTransient<IBirdAnalyzer, BirdAnalyzer>();
+            services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
