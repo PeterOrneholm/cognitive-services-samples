@@ -1,5 +1,6 @@
-﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
-@inject Orneholm.BirdOrNot.Models.GoogleAnalyticsOptions GoogleAnalyticsOptions
+﻿@using Microsoft.Extensions.Options
+@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@inject IOptions<Orneholm.BirdOrNot.Models.GoogleAnalyticsOptions> GoogleAnalyticsOptions
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,13 +23,13 @@
     <link rel="stylesheet" href="~/css/site.css" />
     
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=@GoogleAnalyticsOptions.GoogleAnalyticsKey"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@(GoogleAnalyticsOptions.Value.GoogleAnalyticsKey)"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', '@GoogleAnalyticsOptions.GoogleAnalyticsKey');
+        gtag('config', '@GoogleAnalyticsOptions.Value.GoogleAnalyticsKey');
     </script>
     
     <!-- Application Insights -->

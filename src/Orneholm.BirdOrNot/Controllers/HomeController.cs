@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Orneholm.BirdOrNot.Models;
 using Orneholm.BirdOrNot.Services;
@@ -9,10 +11,12 @@ namespace Orneholm.BirdOrNot.Controllers
     public class HomeController : Controller
     {
         private readonly IBirdAnalyzer _birdAnalyzer;
+        private readonly TelemetryClient _telemetryClient;
 
-        public HomeController(IBirdAnalyzer birdAnalyzer)
+        public HomeController(IBirdAnalyzer birdAnalyzer, TelemetryClient telemetryClient)
         {
             _birdAnalyzer = birdAnalyzer;
+            _telemetryClient = telemetryClient;
         }
 
         public async Task<ActionResult<BirdAnalysisResult>> Index(string imageUrl)
@@ -26,11 +30,23 @@ namespace Orneholm.BirdOrNot.Controllers
             {
                 try
                 {
-                    viewModel.Result = await _birdAnalyzer.AnalyzeImageFromUrlAsync(imageUrl);
+                    var result = await _birdAnalyzer.AnalyzeImageFromUrlAsync(imageUrl);
+                    viewModel.Result = result;
+                    _telemetryClient.TrackEvent("BON_ImageAnalyzed", new Dictionary<string, string>
+                    {
+                        { "BON_ImageUrl", imageUrl },
+                        { "BON_IsBird", result.IsBird.ToString() },
+                        { "BON_IsBirdConfidence", result.IsBirdConfidence.ToString() },
+                        { "BON_ImageDescription", result.Metadata.ImageDescription },
+                    });
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     viewModel.Result = null;
+                    _telemetryClient.TrackException(ex, new Dictionary<string, string>
+                    {
+                        { "BON_ImageUrl", imageUrl }
+                    });
                 }
             }
 
