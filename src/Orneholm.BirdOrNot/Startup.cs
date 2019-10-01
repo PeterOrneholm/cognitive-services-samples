@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Orneholm.BirdOrNot.Controllers;
+using Orneholm.BirdOrNot.Models;
+using Orneholm.BirdOrNot.Services;
 
 namespace Orneholm.BirdOrNot
 {
@@ -18,6 +21,8 @@ namespace Orneholm.BirdOrNot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.Configure<BirdAnalysisOptions>(Configuration);
+            services.AddTransient<IBirdAnalyzer, BirdAnalyzer>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

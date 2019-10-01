@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   aria-hidden="true"
+   focusable="false"
+   data-prefix="fad"
+   data-icon="crow"
+   class="svg-inline--fa fa-crow fa-w-20"
+   role="img"
+   viewBox="0 0 700 700"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="birdornot.svg"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   width="700"
+   height="700">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1506"
+     id="namedview10"
+     showgrid="false"
+     inkscape:zoom="0.4609375"
+     inkscape:cx="-118.23729"
+     inkscape:cy="256"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g6" />
+  <g
+     class="fa-group"
+     id="g6"
+     transform="translate(0,188)">
+    <g
+       id="g816"
+       transform="translate(29.981191,-93.996876)">
+      <path
+         inkscape:connector-curvature="0"
+         style="opacity:0.4;fill:#008bc3;fill-opacity:1"
+         id="path2"
+         d="m 447.27,487.67 a 12,12 0 0 1 -7.17,15.38 l -22.55,8.21 a 12,12 0 0 1 -15.38,-7.17 L 357.52,383.92 a 192,192 0 0 0 48.73,-7.7 z M 312.87,384 H 261 l 45.22,120.1 a 12,12 0 0 0 15.38,7.17 l 22.55,-8.21 a 12,12 0 0 0 7.17,-15.38 z M 640,96 C 640,60.65 597,32 544,32 h -16 a 79.67,79.67 0 0 1 16,48 v 32 z"
+         class="fa-secondary" />
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#008bc3;fill-opacity:1"
+         id="path4"
+         d="m 464,0 a 80,80 0 0 0 -80,80 v 21 L 12.09,393.57 a 30.22,30.22 0 0 0 31.64,51.2 L 165.27,384 H 352 c 106,0 192,-86 192,-192 V 80 A 80,80 0 0 0 464,0 Z m 0,104 a 24,24 0 1 1 24,-24 24,24 0 0 1 -24,24 z"
+         class="fa-primary" />
+    </g>
+  </g>
+</svg>

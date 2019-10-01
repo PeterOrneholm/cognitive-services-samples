@@ -4,16 +4,35 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>BirdOrNot.net</title>
+    <title>BirdOrNot.net - Is it a bird or not? Find out using AI!</title>
+    <meta name="description" content="Is it a bird or not? Find out using AI!" />
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <base href="/" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/birdornot-180x180.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/birdornot-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/birdornot-16x16.png" />
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-zrnmn8R8KkWl12rAZFt4yKjxplaDaT7/EUkKm7AovijfrQItFWR7O/JJn4DAa/gx" crossorigin="anonymous" />
+
     <link rel="stylesheet" href="~/css/site.css" />
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-418219-17"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-418219-17');
+    </script>
+
 </head>
 <body>
     <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        @RenderBody()
     </div>
 
     <script src="~/js/site.js" asp-append-version="true"></script>

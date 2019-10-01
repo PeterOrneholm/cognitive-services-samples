@@ -1,4 +1,131 @@
-﻿<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+﻿@model Orneholm.BirdOrNot.Models.HomeIndexViewModel
+<header>
+    <a href="/" class="display-4"><i class="fad fa-crow"></i> BirdOrNot.net</a>
+
+    <p class="pl-4">Is it a bird or not? Find out using AI!</p>
+</header>
+
+<main>
+    <form class="my-5">
+        <div class="input-group">
+            <input type="text" class="form-control @(Model.IsInvalid ? "is-invalid" : "")" placeholder="URL to picture (JPEG, PNG, GIF, or BMP)" asp-for="ImageUrl" />
+            <div class="input-group-append">
+                <button class="btn btn-outline-light" type="submit">Analyze</button>
+            </div>
+        </div>
+        <div class="samples">
+            <span>Samples:</span>
+            <a href="?ImageUrl=@Uri.EscapeDataString("https://upload.wikimedia.org/wikipedia/commons/b/b8/Nebelkr%C3%A4he_Corvus_cornix.jpg")">Crow</a>
+            <a href="?ImageUrl=@Uri.EscapeDataString("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Blue-and-Yellow-Macaw.jpg/800px-Blue-and-Yellow-Macaw.jpg")">Parrot</a>
+            <a href="?ImageUrl=@Uri.EscapeDataString("https://upload.wikimedia.org/wikipedia/commons/9/9a/Falco_peregrinus_good_-_Christopher_Watson.jpg")">Falcon</a>
+            <a href="?ImageUrl=@Uri.EscapeDataString("https://upload.wikimedia.org/wikipedia/commons/d/df/Peacock%2C_East_Park%2C_Hull_-_panoramio.jpg")">Peacock</a>
+            <a href="?ImageUrl=@Uri.EscapeDataString("https://upload.wikimedia.org/wikipedia/commons/c/ca/Alligatoren_%28Alligator_mississippiensis%29_in_Florida.jpg")">Alligator</a>
+            <a href="?ImageUrl=@Uri.EscapeDataString("https://upload.wikimedia.org/wikipedia/commons/b/bf/Bird_Diversity_2013.png")">Multiple birds</a>
+        </div>
+    </form>
+
+    @if (Model.HasResult)
+    {
+        var result = Model.Result;
+
+        if (result.IsBird)
+        {
+            var birdSpiecies = result.Birds.FirstOrDefault(x => x.BirdSpiecies != null);
+            if (birdSpiecies != null)
+            {
+                <h1 class="text-center">It is a @birdSpiecies.BirdSpiecies!</h1>
+            }
+            else
+            {
+                <h1 class="text-center">It is a bird!</h1>
+            }
+        }
+        else
+        {
+            <h1>It's not a bird...</h1>
+        }
+
+        <div class="row mt-2">
+            <div class="col-sm-5 p-1">
+                <div class="card p-1">
+                    <img src="@Model.ImageUrl" class="card-img-top" alt="@result.Metadata.ImageDescription">
+                </div>
+            </div>
+            <div class="col-sm-7 p-1">
+                <div class="card">
+                    @if (result.IsBird)
+                    {
+                        <div class="card-body">
+                            <p class="card-text">
+                                According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services (Computer Vision)</a> the image contains a bird (@($"{result.IsBirdConfidence:P1}") confidence).
+                                @if (result.Birds.Count > 1)
+                                {
+                                    <text>It even contains multiple birds (@result.Birds.Count to be exact). See a list of them below.</text>
+                                }
+                            </p>
+
+                            <dl class="row">
+                                <dt class="col-sm-3">Image description</dt>
+                                <dd class="col-sm-9">@result.Metadata.ImageDescription</dd>
+
+                                <dt class="col-sm-3">Image tags</dt>
+                                <dd class="col-sm-9">
+                                    @foreach (var tag in result.Metadata.ImageTags)
+                                    {
+                                        <span class="badge badge-pill badge-info">@tag</span>
+                                    }
+                                </dd>
+                            </dl>
+
+                            <dl class="row">
+                                @for (var i = 0; i < result.Birds.Count; i++)
+                                {
+                                    var bird = result.Birds[i];
+                                    <dt class="col-sm-3">Bird @(i + 1)</dt>
+                                    <dd class="col-sm-9">
+                                        <dl class="row">
+                                            <dt class="col-sm-3 font-weight-normal">Species</dt>
+                                            @if (bird.BirdSpiecies != null)
+                                            {
+                                                <dd class="col-sm-9">@bird.BirdSpiecies (@($"{bird.IsBirdSpieciesConfidence:P1}") confidence)</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd class="col-sm-9">-</dd>
+                                            }
+
+                                            <dt class="col-sm-3 font-weight-normal">Is bird?</dt>
+                                            <dd class="col-sm-9">Yes! (@($"{bird.IsBirdConfidence:P1}") confidence)</dd>
+
+                                            <dt class="col-sm-3 font-weight-normal">Is animal?</dt>
+                                            <dd class="col-sm-9">Yes! (@($"{bird.IsAnimalConfidence:P1}") confidence)</dd>
+                                        </dl>
+                                    </dd>
+                                }
+                            </dl>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card-body">
+                            <p class="card-text">According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services (Computer Vision)</a> the image does not contain a bird...</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</main>
+
+<footer class="mt-3">
+    <p class="mb-2">
+        Inspired by <a href="https://xkcd.com/1425/" target="_blank">this XKCD about tasks</a>.
+    </p>
+
+    <p>
+        Using <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services (Computer Vision)</a> with a pre-trained model to detect birds.
+    </p>
+    <p>
+        Developed by <a href="https://twitter.com/PeterOrneholm" target="_blank">@@PeterOrneholm</a> as a demo for the session &quot;Democratizing AI with Azure Cognitive Services&quot;.
+    </p>
+</footer>
