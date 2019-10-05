@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faces", "src\Faces\Faces.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Speech", "src\Speech\Speech.csproj", "{70833AD6-1226-4B75-8232-1EB47D19076C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared.csproj", "{B9DB5263-C4E0-41E5-BC2A-502609142377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{B9DB5263-C4E0-41E5-BC2A-502609142377}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orneholm.BirdOrNot", "src\Orneholm.BirdOrNot\Orneholm.BirdOrNot.csproj", "{E423F870-3C32-4B46-B781-2573046115A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orneholm.BirdOrNot", "src\Orneholm.BirdOrNot\Orneholm.BirdOrNot.csproj", "{E423F870-3C32-4B46-B781-2573046115A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orneholm.NewsSearch", "src\Orneholm.NewsSearch\Orneholm.NewsSearch.csproj", "{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{E423F870-3C32-4B46-B781-2573046115A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E423F870-3C32-4B46-B781-2573046115A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E423F870-3C32-4B46-B781-2573046115A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
