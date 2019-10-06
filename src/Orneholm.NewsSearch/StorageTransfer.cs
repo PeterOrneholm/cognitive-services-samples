@@ -45,35 +45,76 @@ namespace Orneholm.NewsSearch
         {
             var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(targetBlobName);
 
+            Console.WriteLine($"Transfering {sourceUrl} to {targetBlobName}..");
+
             if (!await cloudBlockBlob.ExistsAsync())
             {
                 var blockId = GetBase64Encoded("1");
                 var sourceUri = new Uri(sourceUrl);
 
                 cloudBlockBlob.PutBlock(blockId, sourceUri, 0, null, Checksum.None);
-                await cloudBlockBlob.PutBlockListAsync(new List<string> {blockId});
+                await cloudBlockBlob.PutBlockListAsync(new List<string> { blockId });
+
+                Console.WriteLine($"Transfered {sourceUrl} to {targetBlobName}!");
             }
+            else
+            {
+                Console.WriteLine($"Blob already existed: {targetBlobName}");
+            }
+
 
             if (metadata != null)
             {
-                cloudBlockBlob.Metadata.Clear();
+                await cloudBlockBlob.FetchAttributesAsync();
                 foreach (var property in metadata)
                 {
-                    cloudBlockBlob.Metadata.Add(property);
+                    cloudBlockBlob.Metadata[property.Key] = property.Value;
                 }
-            }
 
-            try
-            {
-                await cloudBlockBlob.SetMetadataAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
+                try
+                {
+                    Console.WriteLine($"Updating metadata for {targetBlobName}...");
+                    await cloudBlockBlob.SetMetadataAsync();
+                    Console.WriteLine($"Updated metadata for {targetBlobName}!");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
 
             var sas = GetContainerSasUri(cloudBlobContainer);
             return new Uri(cloudBlockBlob.Uri + sas);
+        }
+
+        public async Task SetMetadata(string containerName, string blobName, Dictionary<string, string> metadata)
+        {
+            var cloudBlobContainer = _cloudBlobClient.GetContainerReference(containerName);
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(blobName);
+            await cloudBlockBlob.FetchAttributesAsync();
+            foreach (var property in metadata)
+            {
+                cloudBlockBlob.Metadata[property.Key] = property.Value;
+            }
+            await cloudBlockBlob.SetMetadataAsync();
+        }
+
+        public async Task SetMetadataValue(string containerName, string blobName, string key, string value)
+        {
+            var cloudBlobContainer = _cloudBlobClient.GetContainerReference(containerName);
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(blobName);
+            await cloudBlockBlob.FetchAttributesAsync();
+            cloudBlockBlob.Metadata[key] = value;
+            await cloudBlockBlob.SetMetadataAsync();
+        }
+
+        public async Task<IDictionary<string, string>> GetMetadataValues(string containerName, string blobName)
+        {
+            var cloudBlobContainer = _cloudBlobClient.GetContainerReference(containerName);
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(blobName);
+            await cloudBlockBlob.FetchAttributesAsync();
+
+            return cloudBlockBlob.Metadata;
         }
 
         private static string GetBase64Encoded(string text)

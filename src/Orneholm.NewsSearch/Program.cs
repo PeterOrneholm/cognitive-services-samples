@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Orneholm.NewsSearch.Models;
 using Shared;
@@ -8,7 +9,7 @@ namespace Orneholm.NewsSearch
     public class Program
     {
         private const int SrProgramId = 2054;
-        private const int EpisodesCount = 20;
+        private const int EpisodesCount = 21;
         private const string EpisodesLocale = "en-US";
 
         private const string StorageConnectionString = SecretKeys.NewsSearchStorageConnectionString;
@@ -21,16 +22,42 @@ namespace Orneholm.NewsSearch
 
         public static async Task Main(string[] args)
         {
+            Console.WriteLine("News Search!");
+            Console.WriteLine("----------------------------");
+            Console.WriteLine("");
+
             var storageTransfer = new StorageTransfer(StorageConnectionString);
 
+            Console.WriteLine($"Transfering episodes from SR (program {SrProgramId})...");
             var srEpisodeTransfer = new SrEpisodeTransfer(StorageMediaContainerName, storageTransfer);
             var transferedSrEpisodes = await srEpisodeTransfer.TransferSrEpisodes(SrProgramId, EpisodesCount);
+            Console.WriteLine($"{transferedSrEpisodes.Count} episodes transfered from SR (program {SrProgramId})!");
 
-            var srEpisodeTranscriber = new SrEpisodeTranscriber(StorageMediaTranscriptionsContainerName, SpeechKey, SpeechHostName, storageTransfer);
-            await srEpisodeTranscriber.TranscribeAndPersist(transferedSrEpisodes, EpisodesLocale);
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+            var filteredTransferedSrEpisodes = await FilterTransferedSrEpisodes(transferedSrEpisodes, storageTransfer);
+
+            var srEpisodeTranscriber = new SrEpisodeTranscriber(StorageMediaTranscriptionsContainerName, StorageMediaContainerName, SpeechKey, SpeechHostName, storageTransfer);
+            await srEpisodeTranscriber.TranscribeAndPersist(filteredTransferedSrEpisodes, EpisodesLocale);
 
             Console.WriteLine("Done");
             Console.ReadLine();
+        }
+
+        private static async Task<List<TransferedEpisode>> FilterTransferedSrEpisodes(List<TransferedEpisode> transferedSrEpisodes, StorageTransfer storageTransfer)
+        {
+            var filteredTransferedSrEpisodes = new List<TransferedEpisode>();
+            foreach (var transferedSrEpisode in transferedSrEpisodes)
+            {
+                var metadata = await storageTransfer.GetMetadataValues(StorageMediaContainerName, transferedSrEpisode.EpisodeBlobIdentifier);
+                if (!metadata.ContainsKey("NS_IsTranscribed") || metadata["NS_IsTranscribed"] != "True")
+                {
+                    filteredTransferedSrEpisodes.Add(transferedSrEpisode);
+                }
+            }
+
+            return filteredTransferedSrEpisodes;
         }
     }
 }

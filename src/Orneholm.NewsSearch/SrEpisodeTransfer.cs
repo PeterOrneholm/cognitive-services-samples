@@ -31,7 +31,9 @@ namespace Orneholm.NewsSearch
 
         public async Task<List<TransferedEpisode>> TransferSrEpisodes(int programId, int count)
         {
+            Console.WriteLine($"Fetching episodes from SR (program {programId})...");
             var srEpisodes = await GetSrEpisodes(programId, count);
+            Console.WriteLine($"Fetched {srEpisodes.Count} episodes from SR (program {programId})!");
 
             var transferedEpisodes = new List<TransferedEpisode>();
 

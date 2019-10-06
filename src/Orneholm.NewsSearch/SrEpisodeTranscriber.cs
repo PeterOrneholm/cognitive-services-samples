@@ -8,13 +8,15 @@ namespace Orneholm.NewsSearch
 {
     public class SrEpisodeTranscriber
     {
-        private readonly string _cloudBlobContainerName;
+        private readonly string _transcriptionsContainerName;
+        private readonly string _mediaContainerName;
         private readonly StorageTransfer _storageTransfer;
         private readonly SpeechBatchClient _speechBatchClient;
 
-        public SrEpisodeTranscriber(string cloudBlobContainerName, string searchSpeechKey, string searchHostName, StorageTransfer storageTransfer)
+        public SrEpisodeTranscriber(string transcriptionsContainerName, string mediaContainerName, string searchSpeechKey, string searchHostName, StorageTransfer storageTransfer)
         {
-            _cloudBlobContainerName = cloudBlobContainerName;
+            _transcriptionsContainerName = transcriptionsContainerName;
+            _mediaContainerName = mediaContainerName;
             _storageTransfer = storageTransfer;
             _speechBatchClient = SpeechBatchClient.CreateApiV2Client(searchSpeechKey, searchHostName, 443);
         }
@@ -33,7 +35,8 @@ namespace Orneholm.NewsSearch
             while (completed < episodeTranscriptions.Count)
             {
                 var transcriptions = (await _speechBatchClient.GetTranscriptionsAsync()).ToList();
-                completed = 0;
+
+                Console.WriteLine("Checking transcription status...");
 
                 foreach (var transcription in transcriptions.Where(x => x.Status == "Failed" || x.Status == "Succeeded"))
                 {
@@ -48,8 +51,20 @@ namespace Orneholm.NewsSearch
 
                     if (transcription.Status == "Succeeded")
                     {
+                        Console.WriteLine($"[{completed} / {episodeTranscriptions.Count}] Transcribed {transferedEpisode.BlobAudioUri}!");
+
                         await TransferResultForChannel(transferedEpisode, transcription, "0");
                         await TransferResultForChannel(transferedEpisode, transcription, "1");
+
+                        await _storageTransfer.SetMetadata(_mediaContainerName, transferedEpisode.EpisodeBlobIdentifier,
+                            new Dictionary<string, string>
+                            {
+                                { "NS_IsTranscribed", "True" }
+                            });
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error transcribing {transferedEpisode.BlobAudioUri}!");
                     }
 
                     await _speechBatchClient.DeleteTranscriptionAsync(transcription.Id);
@@ -64,6 +79,8 @@ namespace Orneholm.NewsSearch
             var episodeTranscriptions = new Dictionary<Guid, TransferedEpisode>();
             foreach (var episode in srEpisodes)
             {
+                Console.WriteLine($"Transcribing {episode.BlobAudioUri}...");
+
                 var transcriptionLocation = await _speechBatchClient.PostTranscriptionAsync(
                     $"NewsSearch - {episode.EpisodeBlobIdentifier}",
                     "NewsSearch",
@@ -90,7 +107,7 @@ namespace Orneholm.NewsSearch
                 var targetBlobUrl = $"{targetBlobPrefix}{channel}.json";
 
                 await _storageTransfer.TransferBlockBlobIfNotExists(
-                    _cloudBlobContainerName,
+                    _transcriptionsContainerName,
                     targetBlobUrl,
                     resultsUri,
                     metadata
