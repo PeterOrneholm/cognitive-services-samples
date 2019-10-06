@@ -20,6 +20,8 @@ namespace Orneholm.NewsSearch
         private const string SpeechKey = SecretKeys.NewsSearchSpeechKey;
         private static string SpeechHostName = $"{SecretKeys.NewsSearchSpeechRegion}.cris.ai";
 
+        private const string TextAnalyticsKey = SecretKeys.NewsSearchTextAnalyticsKey;
+        private static string TextAnalyticsEndpoint = SecretKeys.NewsSearchTextAnalyticsEndpoint;
 
         public static async Task Main(string[] args)
         {
@@ -46,7 +48,7 @@ namespace Orneholm.NewsSearch
             Console.WriteLine("");
             Console.WriteLine("Enriching transcriptions...");
 
-            var transcriptionEnricher = new TranscriptionEnricher(StorageConnectionString, StorageMediaTranscriptionsContainerName, StorageMediaEpisodesContainerName);
+            var transcriptionEnricher = new TranscriptionEnricher(StorageConnectionString, StorageMediaTranscriptionsContainerName, StorageMediaEpisodesContainerName, TextAnalyticsKey, TextAnalyticsEndpoint);
             await transcriptionEnricher.Enrich();
 
             Console.WriteLine("Done");

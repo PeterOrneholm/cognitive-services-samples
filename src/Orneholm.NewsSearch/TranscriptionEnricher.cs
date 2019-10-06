@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Azure.CognitiveServices.Language.TextAnalytics;
+using Microsoft.Azure.CognitiveServices.Language.TextAnalytics.Models;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
+using Microsoft.Rest;
 using Newtonsoft.Json;
 using Orneholm.NewsSearch.Models;
 
@@ -14,8 +19,9 @@ namespace Orneholm.NewsSearch
         private readonly string _sourceContainerName;
         private readonly string _targetContainerName;
         private readonly CloudBlobClient _cloudBlobClient;
+        private readonly TextAnalyticsClient _textAnalyticsClient;
 
-        public TranscriptionEnricher(string storageConnectionString, string sourceContainerName, string targetContainerName)
+        public TranscriptionEnricher(string storageConnectionString, string sourceContainerName, string targetContainerName, string textAnalyticsKey, string textAnalyticsEndpoint)
         {
             _sourceContainerName = sourceContainerName;
             _targetContainerName = targetContainerName;
@@ -23,17 +29,32 @@ namespace Orneholm.NewsSearch
             {
                 _cloudBlobClient = storageAccount.CreateCloudBlobClient();
             }
+
+            var credentials = new ApiKeyServiceClientCredentials(textAnalyticsKey);
+            _textAnalyticsClient = new TextAnalyticsClient(credentials)
+            {
+                Endpoint = textAnalyticsEndpoint
+            };
         }
 
         public async Task Enrich()
         {
-            var cloudBlobContainer = _cloudBlobClient.GetContainerReference(_sourceContainerName);
+            var sourceBlobContainer = _cloudBlobClient.GetContainerReference(_sourceContainerName);
+            var targetBlobContainer = _cloudBlobClient.GetContainerReference(_targetContainerName);
+            await targetBlobContainer.CreateIfNotExistsAsync();
+
 
             var srAnalyzedEpisodes = new List<SrAnalyzedEpisode>();
-            foreach (var item in cloudBlobContainer.ListBlobs(null, true).OfType<CloudBlockBlob>())
+            foreach (var item in sourceBlobContainer.ListBlobs(null, true).OfType<CloudBlockBlob>().Take(4))
             {
                 await item.FetchAttributesAsync();
+
                 if (!item.Metadata.ContainsKey("NS_Channel") || item.Metadata["NS_Channel"] != "0")
+                {
+                    continue;
+                }
+
+                if (item.Metadata.ContainsKey("NS_Enriched") && item.Metadata["NS_Enriched"] != "1")
                 {
                     continue;
                 }
@@ -43,45 +64,97 @@ namespace Orneholm.NewsSearch
                 var parsedItem = parsedFile.AudioFileResults.FirstOrDefault();
                 var combinedResult = parsedItem?.CombinedResults.FirstOrDefault();
 
-                var srAnalyzedEpisode = new SrAnalyzedEpisode
-                {
-                    ProgramId = int.Parse(item.Metadata["NS_Episode_Program_Id"]),
-                    ProgramName = item.Metadata["NS_Episode_Program_Name"],
+                var srAnalyzedEpisode = GetSrAnalyzedEpisode(item, parsedItem, combinedResult);
 
-                    EpisodeId = int.Parse(item.Metadata["NS_Episode_Id"]),
-                    EpisodeTitle = DecodeBase64(item.Metadata["NS_Episode_Title_B64"]),
-                    EpisodeDescription = DecodeBase64(item.Metadata["NS_Episode_Description_B64"]),
-
-                    EpisodeWebUrl = item.Metadata["NS_Episode_WebUrl"],
-                    EpisodeImageUrl = item.Metadata["NS_Episode_ImageUrl"],
-                    EpisodeAudioUrl = item.Metadata["NS_Episode_AudioUrl"],
-
-                    PublishDateUtc = DateTime.Parse(item.Metadata["NS_Episode_PublishDateUtc"]),
-
-                    AudioLengthInSeconds = parsedItem.AudioLengthInSeconds,
-
-                    OriginalDisplayTranscription = combinedResult?.Display,
-
-                    TranscriptionCombined = new SrAnalyzedEpisode.TranscriptionCombinedResult()
-                    {
-                        ChannelNumber = combinedResult?.ChannelNumber,
-                        Display = combinedResult?.Display,
-                        Lexical = combinedResult?.Lexical,
-                        ITN = combinedResult?.ITN,
-                        MaskedITN = combinedResult?.MaskedITN,
-                    }
-                };
+                await EncirchWithAnalytics(srAnalyzedEpisode);
 
                 srAnalyzedEpisodes.Add(srAnalyzedEpisode);
+
+                var episodeJson = JsonConvert.SerializeObject(srAnalyzedEpisode, Formatting.Indented);
+
+                var targetBlob = targetBlobContainer.GetBlockBlobReference(item.Name);
+                await targetBlob.UploadTextAsync(episodeJson);
+
+                item.Metadata["NS_Enriched"] = "1";
+                await item.SetMetadataAsync();
             }
 
             Console.WriteLine("Enriched!");
+        }
+
+        private async Task EncirchWithAnalytics(SrAnalyzedEpisode srAnalyzedEpisode)
+        {
+            var limitedText = srAnalyzedEpisode.OriginalDisplayTranscription.Substring(0,
+                Math.Min(5120, srAnalyzedEpisode.OriginalDisplayTranscription.Length));
+
+            var keyPhrases = await _textAnalyticsClient.KeyPhrasesAsync(limitedText);
+            srAnalyzedEpisode.TranscriptionKeyPhrases = keyPhrases.KeyPhrases?.ToList() ?? new List<string>();
+
+            var sentimentAsync = await _textAnalyticsClient.SentimentAsync(limitedText);
+            srAnalyzedEpisode.TranscriptionSentiment = sentimentAsync.Score;
+
+            var entities = await _textAnalyticsClient.EntitiesAsync(limitedText);
+            srAnalyzedEpisode.TranscriptionEntities = entities.Entities?.ToList() ?? new List<EntityRecord>();
+        }
+
+        private SrAnalyzedEpisode GetSrAnalyzedEpisode(CloudBlockBlob item, AudioFileResult parsedItem,
+            Combinedresult combinedResult)
+        {
+            var srAnalyzedEpisode = new SrAnalyzedEpisode
+            {
+                ProgramId = int.Parse(item.Metadata["NS_Episode_Program_Id"]),
+                ProgramName = item.Metadata["NS_Episode_Program_Name"],
+
+                EpisodeId = int.Parse(item.Metadata["NS_Episode_Id"]),
+                EpisodeTitle = DecodeBase64(item.Metadata["NS_Episode_Title_B64"]),
+                EpisodeDescription = DecodeBase64(item.Metadata["NS_Episode_Description_B64"]),
+
+                EpisodeWebUrl = item.Metadata["NS_Episode_WebUrl"],
+                EpisodeImageUrl = item.Metadata["NS_Episode_ImageUrl"],
+                EpisodeAudioUrl = item.Metadata["NS_Episode_AudioUrl"],
+
+                PublishDateUtc = DateTime.Parse(item.Metadata["NS_Episode_PublishDateUtc"]),
+
+                AudioLengthInSeconds = parsedItem.AudioLengthInSeconds,
+
+                OriginalDisplayTranscription = combinedResult?.Display,
+
+                TranscriptionCombined = new SrAnalyzedEpisode.TranscriptionCombinedResult()
+                {
+                    ChannelNumber = combinedResult?.ChannelNumber,
+                    Display = combinedResult?.Display,
+                    Lexical = combinedResult?.Lexical,
+                    ITN = combinedResult?.ITN,
+                    MaskedITN = combinedResult?.MaskedITN,
+                }
+            };
+            return srAnalyzedEpisode;
         }
 
         private string DecodeBase64(string encoded)
         {
             var data = Convert.FromBase64String(encoded);
             return System.Text.Encoding.Unicode.GetString(data);
+        }
+
+        private class ApiKeyServiceClientCredentials : ServiceClientCredentials
+        {
+            private readonly string apiKey;
+
+            public ApiKeyServiceClientCredentials(string apiKey)
+            {
+                this.apiKey = apiKey;
+            }
+
+            public override Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                if (request == null)
+                {
+                    throw new ArgumentNullException("request");
+                }
+                request.Headers.Add("Ocp-Apim-Subscription-Key", this.apiKey);
+                return base.ProcessHttpRequestAsync(request, cancellationToken);
+            }
         }
     }
 
@@ -103,6 +176,10 @@ namespace Orneholm.NewsSearch
 
         public string OriginalDisplayTranscription { get; set; }
         public Dictionary<string, string> TranslatedDisplayTranscription { get; set; }
+
+        public List<string> TranscriptionKeyPhrases { get; set; }
+        public double? TranscriptionSentiment { get; set; }
+        public List<EntityRecord> TranscriptionEntities { get; set; }
 
         public TranscriptionCombinedResult TranscriptionCombined { get; set; }
 
