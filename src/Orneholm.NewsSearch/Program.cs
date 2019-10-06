@@ -15,6 +15,7 @@ namespace Orneholm.NewsSearch
         private const string StorageConnectionString = SecretKeys.NewsSearchStorageConnectionString;
         private static string StorageMediaContainerName = "newsmedia";
         private const string StorageMediaTranscriptionsContainerName = "newsmediatranscriptions";
+        private const string StorageMediaEpisodesContainerName = "newsmediaepisodes";
 
         private const string SpeechKey = SecretKeys.NewsSearchSpeechKey;
         private static string SpeechHostName = $"{SecretKeys.NewsSearchSpeechRegion}.cris.ai";
@@ -40,6 +41,13 @@ namespace Orneholm.NewsSearch
 
             var srEpisodeTranscriber = new SrEpisodeTranscriber(StorageMediaTranscriptionsContainerName, StorageMediaContainerName, SpeechKey, SpeechHostName, storageTransfer);
             await srEpisodeTranscriber.TranscribeAndPersist(filteredTransferedSrEpisodes, EpisodesLocale);
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("Enriching transcriptions...");
+
+            var transcriptionEnricher = new TranscriptionEnricher(StorageConnectionString, StorageMediaTranscriptionsContainerName, StorageMediaEpisodesContainerName);
+            await transcriptionEnricher.Enrich();
 
             Console.WriteLine("Done");
             Console.ReadLine();
