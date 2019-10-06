@@ -12,7 +12,7 @@ namespace Faces
 {
     class Program
     {
-        private const string subscriptionKey = SecretKeys.Faces;
+        private const string subscriptionKey = SecretKeys.FacesKey;
         private const string faceEndpoint = "https://westeurope.api.cognitive.microsoft.com";
 
         // https://www.aftonbladet.se/story/valet-2018

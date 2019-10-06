@@ -9,7 +9,7 @@ namespace Speech
     {
         public static async Task RecognizeSpeechAsync()
         {
-            var config = SpeechConfig.FromSubscription(SecretKeys.Speech, "westeurope");
+            var config = SpeechConfig.FromSubscription(SecretKeys.SpeechKey, "westeurope");
             config.SpeechRecognitionLanguage = "sv-SE";
             //var ac = Microsoft.CognitiveServices.Speech.Audio.AudioConfig.
             // Creates a speech recognizer.

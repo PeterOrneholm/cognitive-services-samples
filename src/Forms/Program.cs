@@ -19,7 +19,7 @@ namespace Forms
             var fileBytes = ReadFully(fileStream);
             using (var httpClient = new HttpClient())
             {
-                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SecretKeys.Form);
+                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SecretKeys.FormKey);
 
                 using (var content = new ByteArrayContent(fileBytes))
                 {
