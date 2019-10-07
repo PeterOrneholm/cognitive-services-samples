@@ -45,7 +45,7 @@ namespace Orneholm.NewsSearch
 
 
             var srAnalyzedEpisodes = new List<SrAnalyzedEpisode>();
-            foreach (var item in sourceBlobContainer.ListBlobs(null, true).OfType<CloudBlockBlob>().Take(4))
+            foreach (var item in sourceBlobContainer.ListBlobs(null, true).OfType<CloudBlockBlob>())
             {
                 await item.FetchAttributesAsync();
 
