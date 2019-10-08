@@ -1,4 +1,5 @@
-﻿@model Orneholm.BirdOrNot.Models.HomeIndexViewModel
+﻿@using Microsoft.ApplicationInsights.AspNetCore
+@model Orneholm.BirdOrNot.Models.HomeIndexViewModel
 <header>
     <a href="/" class="display-4"><i class="fad fa-crow"></i> BirdOrNot.net</a>
 
@@ -114,6 +115,21 @@
                 </div>
             </div>
         </div>
+
+        @if (Model.HasResult)
+        {
+            <div class="text-center mt-2 pt-2 text-white" style="border-top: 1px solid rgba(250, 250, 250, 0.51);">
+                <h4>Do you agree?</h4>
+
+                <div class="btn-group" id="feedback-buttons">
+                    <button type="button" class="btn btn-outline-light" id="feedback-yes">Yes!</button>
+                    <button type="button" class="btn btn-outline-light" id="feedback-no">No...</button>
+                </div>
+                <div id="feedback-thanks" style="display: none;">
+                    Thank you for the feedback!
+                </div>
+            </div>
+        }
     }
 </main>
 
@@ -129,3 +145,38 @@
         Developed by <a href="https://twitter.com/PeterOrneholm" target="_blank">@@PeterOrneholm</a> as a demo for the session &quot;Democratizing AI with Azure Cognitive Services&quot;.
     </p>
 </footer>
+
+@section Scripts {
+    <script>
+        (function() {
+            var feedbackButtons = document.querySelector("#feedback-buttons");
+            var feedbackYesButton = document.querySelector("#feedback-yes");
+            var feedbackNoButton = document.querySelector("#feedback-no");
+            var feedbackThanks = document.querySelector("#feedback-thanks");
+
+            if (!feedbackButtons) {
+                return;
+            }
+
+            feedbackYesButton.addEventListener("click", function() {
+                feedback("true");
+            });
+
+            feedbackNoButton.addEventListener("click", function() {
+                feedback("false");
+            });
+
+            function feedback(agree) {
+                if (window.appInsights) {
+                    window.appInsights.trackEvent("BirdFeedback", {},
+                        {
+                            "BON_ImageUrl": "@Model.ImageUrl",
+                            "BON_Feedback_Agree": agree
+                        });
+                }
+                feedbackButtons.style.display = "none";
+                feedbackThanks.style.display = "block";
+            }
+        }());
+    </script>
+}
