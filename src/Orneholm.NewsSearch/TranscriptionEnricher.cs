@@ -45,8 +45,11 @@ namespace Orneholm.NewsSearch
 
 
             var srAnalyzedEpisodes = new List<SrAnalyzedEpisode>();
-            foreach (var item in sourceBlobContainer.ListBlobs(null, true).OfType<CloudBlockBlob>())
+            var blobs = sourceBlobContainer.ListBlobs(null, true).OfType<CloudBlockBlob>().ToList();
+            var index = 0;
+            foreach (var item in blobs)
             {
+                index++;
                 await item.FetchAttributesAsync();
 
                 if (!item.Metadata.ContainsKey("NS_Channel") || item.Metadata["NS_Channel"] != "0")
@@ -56,8 +59,11 @@ namespace Orneholm.NewsSearch
 
                 if (item.Metadata.ContainsKey("NS_Enriched") && item.Metadata["NS_Enriched"] != "1")
                 {
+                    Console.WriteLine($"[{index}/{blobs.Count}] {item.Name} already enriched!");
                     continue;
                 }
+
+                Console.WriteLine($"[{index}/{blobs.Count}] Encriching {item.Name}...");
 
                 var itemContent = await item.DownloadTextAsync();
                 var parsedFile = JsonConvert.DeserializeObject<TranscribtionResultFile>(itemContent);
@@ -77,9 +83,9 @@ namespace Orneholm.NewsSearch
 
                 item.Metadata["NS_Enriched"] = "1";
                 await item.SetMetadataAsync();
-            }
 
-            Console.WriteLine("Enriched!");
+                Console.WriteLine($"[{index}/{blobs.Count}] Encriched {item.Name}!");
+            }
         }
 
         private async Task EncirchWithAnalytics(SrAnalyzedEpisode srAnalyzedEpisode)

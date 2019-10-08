@@ -9,7 +9,7 @@ namespace Orneholm.NewsSearch
     public class Program
     {
         private const int SrProgramId = 2054;
-        private const int EpisodesCount = 21;
+        private const int EpisodesCount = 50;
         private const string EpisodesLocale = "en-US";
 
         private const string StorageConnectionString = SecretKeys.NewsSearchStorageConnectionString;
@@ -51,7 +51,9 @@ namespace Orneholm.NewsSearch
             var transcriptionEnricher = new TranscriptionEnricher(StorageConnectionString, StorageMediaTranscriptionsContainerName, StorageMediaEpisodesContainerName, TextAnalyticsKey, TextAnalyticsEndpoint);
             await transcriptionEnricher.Enrich();
 
-            Console.WriteLine("Done");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("Done!");
             Console.ReadLine();
         }
 
