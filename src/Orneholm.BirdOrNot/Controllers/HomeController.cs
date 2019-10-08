@@ -19,7 +19,7 @@ namespace Orneholm.BirdOrNot.Controllers
             _telemetryClient = telemetryClient;
         }
 
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
         public async Task<ActionResult<BirdAnalysisResult>> Index(string imageUrl)
         {
             var viewModel = new HomeIndexViewModel
