@@ -28,107 +28,118 @@
     @if (Model.HasResult)
     {
         var result = Model.Result;
-
+        var text = "";
         if (result.IsBird)
         {
             var birdSpiecies = result.Birds.FirstOrDefault(x => x.BirdSpiecies != null);
             if (birdSpiecies != null)
             {
-                <h1 class="text-center">It is a @birdSpiecies.BirdSpiecies!</h1>
+                text = "It is a " + birdSpiecies.BirdSpiecies + "!";
             }
             else
             {
-                <h1 class="text-center">It is a bird!</h1>
+                text = "It is a bird!";
+
             }
         }
         else
         {
-            <h1>It's not a bird...</h1>
+            text = "It is not a bird...";
         }
 
-        <div class="row mt-2">
-            <div class="col-sm-5 p-1">
-                <div class="card p-1">
-                    <img src="@Model.ImageUrl" class="card-img-top" alt="@result.Metadata.ImageDescription">
-                </div>
+    <h1 class="text-center">@text</h1>
+
+    <div class="text-center">
+        <a class="twitter-share-button"
+           href="https://twitter.com/intent/tweet?text=@(Uri.EscapeDataString(text + " #BirdOrNot "))"
+           data-size="large">
+            Tweet
+        </a>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-5 p-1">
+            <div class="card p-1">
+                <img src="@Model.ImageUrl" class="card-img-top" alt="@result.Metadata.ImageDescription">
             </div>
-            <div class="col-sm-7 p-1">
-                <div class="card">
-                    @if (result.IsBird)
+        </div>
+        <div class="col-sm-7 p-1">
+            <div class="card">
+                @if (result.IsBird)
                     {
-                        <div class="card-body">
-                            <p class="card-text">
-                                According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services</a> the image contains a bird (@($"{result.IsBirdConfidence:P1}") confidence).
-                                @if (result.Birds.Count > 1)
+                <div class="card-body">
+                    <p class="card-text">
+                        According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services</a> the image contains a bird (@($"{result.IsBirdConfidence:P1}") confidence).
+                        @if (result.Birds.Count > 1)
                                 {
-                                    <text>It even contains multiple birds (@result.Birds.Count to be exact). See a list of them below.</text>
+                        <text>It even contains multiple birds (@result.Birds.Count to be exact). See a list of them below.</text>
                                 }
-                            </p>
+                    </p>
 
-                            <dl class="row">
-                                <dt class="col-sm-3">Image description</dt>
-                                <dd class="col-sm-9">@result.Metadata.ImageDescription</dd>
+                    <dl class="row">
+                        <dt class="col-sm-3">Image description</dt>
+                        <dd class="col-sm-9">@result.Metadata.ImageDescription</dd>
 
-                                <dt class="col-sm-3">Image tags</dt>
-                                <dd class="col-sm-9">
-                                    @foreach (var tag in result.Metadata.ImageTags)
+                        <dt class="col-sm-3">Image tags</dt>
+                        <dd class="col-sm-9">
+                            @foreach (var tag in result.Metadata.ImageTags)
                                     {
-                                        <span class="badge badge-pill badge-info">@tag</span>
+                            <span class="badge badge-pill badge-info">@tag</span>
                                     }
-                                </dd>
-                            </dl>
+                        </dd>
+                    </dl>
 
-                            <dl class="row mb-0">
-                                @for (var i = 0; i < result.Birds.Count; i++)
+                    <dl class="row mb-0">
+                        @for (var i = 0; i < result.Birds.Count; i++)
                                 {
                                     var bird = result.Birds[i];
-                                    <dt class="col-sm-3">Bird @(i + 1)</dt>
-                                    <dd class="col-sm-9">
-                                        <dl class="row mb-0">
-                                            <dt class="col-sm-3 font-weight-normal">Species</dt>
-                                            @if (bird.BirdSpiecies != null)
+                        <dt class="col-sm-3">Bird @(i + 1)</dt>
+                        <dd class="col-sm-9">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-3 font-weight-normal">Species</dt>
+                                @if (bird.BirdSpiecies != null)
                                             {
-                                                <dd class="col-sm-9">@bird.BirdSpiecies (@($"{bird.IsBirdSpieciesConfidence:P1}") confidence)</dd>
+                                <dd class="col-sm-9">@bird.BirdSpiecies (@($"{bird.IsBirdSpieciesConfidence:P1}") confidence)</dd>
                                             }
                                             else
                                             {
-                                                <dd class="col-sm-9">-</dd>
+                                <dd class="col-sm-9">-</dd>
                                             }
 
-                                            <dt class="col-sm-3 font-weight-normal">Is bird?</dt>
-                                            <dd class="col-sm-9">Yes! (@($"{bird.IsBirdConfidence:P1}") confidence)</dd>
+                                <dt class="col-sm-3 font-weight-normal">Is bird?</dt>
+                                <dd class="col-sm-9">Yes! (@($"{bird.IsBirdConfidence:P1}") confidence)</dd>
 
-                                            <dt class="col-sm-3 font-weight-normal">Is animal?</dt>
-                                            <dd class="col-sm-9">Yes! (@($"{bird.IsAnimalConfidence:P1}") confidence)</dd>
-                                        </dl>
-                                    </dd>
-                                }
+                                <dt class="col-sm-3 font-weight-normal">Is animal?</dt>
+                                <dd class="col-sm-9">Yes! (@($"{bird.IsAnimalConfidence:P1}") confidence)</dd>
                             </dl>
-                        </div>
+                        </dd>
+                                }
+                    </dl>
+                </div>
                     }
                     else
                     {
-                        <div class="card-body">
-                            <p class="card-text">According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services</a> the image does not contain a bird...</p>
-                        </div>
-                    }
+                <div class="card-body">
+                    <p class="card-text">According to <a href="https://azure.microsoft.com/en-us/services/cognitive-services/computer-vision/" target="_blank">Azure Cognitive Services</a> the image does not contain a bird...</p>
                 </div>
+                    }
             </div>
         </div>
+    </div>
 
-        @if (Model.HasResult)
+    @if (Model.HasResult)
         {
-            <div class="text-center mt-2 pt-2 text-white" style="border-top: 1px solid rgba(250, 250, 250, 0.51);">
-                <h4>Do you agree?</h4>
+    <div class="text-center mt-2 pt-2 text-white" style="border-top: 1px solid rgba(250, 250, 250, 0.51);">
+        <h4>Do you agree?</h4>
 
-                <div class="btn-group" id="feedback-buttons">
-                    <button type="button" class="btn btn-outline-light" id="feedback-yes">Yes!</button>
-                    <button type="button" class="btn btn-outline-light" id="feedback-no">No...</button>
-                </div>
-                <div id="feedback-thanks" style="display: none;">
-                    Thank you for the feedback!
-                </div>
-            </div>
+        <div class="btn-group" id="feedback-buttons">
+            <button type="button" class="btn btn-outline-light" id="feedback-yes">Yes!</button>
+            <button type="button" class="btn btn-outline-light" id="feedback-no">No...</button>
+        </div>
+        <div id="feedback-thanks" style="display: none;">
+            Thank you for the feedback!
+        </div>
+    </div>
         }
     }
 </main>
@@ -145,6 +156,16 @@
         Developed by <a href="https://twitter.com/PeterOrneholm" target="_blank">@@PeterOrneholm</a> as a demo for the session &quot;Democratizing AI with Azure Cognitive Services&quot;.
     </p>
 </footer>
+
+@section HeadMeta {
+    @if(string.IsNullOrWhiteSpace(Model.ImageUrl)) {
+    <meta property="og:image" content="/images/icons/birdornot-512x512.png" />
+    <link rel="canonical" href="https://birdornot.net/" />
+    } else {
+    <meta property="og:image" content="@Model.ImageUrl" />
+    <link rel="canonical" href="https://birdornot.net?ImageUrl=@Uri.EscapeDataString(Model.ImageUrl)" />
+    }
+}
 
 @section Scripts {
     <script>
@@ -179,4 +200,6 @@
             }
         }());
     </script>
+
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 }

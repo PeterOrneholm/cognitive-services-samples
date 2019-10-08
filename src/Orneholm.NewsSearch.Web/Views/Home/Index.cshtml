@@ -8,7 +8,7 @@
 
     @foreach (var episode in Model)
     {
-        <div class="card mb-2">
+        <div class="card mb-4">
             <div style="background: url('@episode.EpisodeImageUrl') no-repeat center; background-size: cover; height: 250px;" class="card-img-top"></div>
             <div class="card-body">
                 <h3 class="card-title">@episode.EpisodeTitle</h3>
@@ -17,6 +17,8 @@
 
                 <p class="card-text"><strong>Description:</strong> @episode.EpisodeDescription</p>
                 
+                <iframe class="mx-y" width="100%" height="150" src="https://sverigesradio.se/embed/episode/@episode.EpisodeId" frameborder="0"></iframe>
+
                 <details class="card-text my-1">
                     <summary class="font-weight-bold">Transcription</summary>
 
@@ -43,9 +45,7 @@
                     }
                 </p>
 
-                <iframe class="mx-y" width="100%" height="150" src="https://sverigesradio.se/embed/episode/@episode.EpisodeId" frameborder="0"></iframe>
-                
-                <a href="@episode.EpisodeWebUrl" class="btn btn-primary pull-right">Read full article</a>
+                <a href="@episode.EpisodeWebUrl" class="btn btn-primary" style="width: 100%;">Read full article</a>
             </div>
         </div>
     }
