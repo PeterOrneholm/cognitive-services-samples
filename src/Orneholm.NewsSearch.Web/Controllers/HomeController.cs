@@ -17,6 +17,7 @@ namespace Orneholm.NewsSearch.Web.Controllers
             _cloudBlobClient = cloudBlobClient;
         }
 
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
         public async Task<IActionResult> Index(string entityName = null, string entityType = null, string keyphrase = null)
         {
             var blobContainer = _cloudBlobClient.GetContainerReference("newsmediaepisodes");

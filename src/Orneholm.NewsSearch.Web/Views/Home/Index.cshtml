@@ -3,8 +3,19 @@
     ViewData["Title"] = "Home Page";
 }
 
+<header>
+    <h1><i class="fad fa-radio"></i> Radio News Search</h1>
+
+    <div class="text-white text-center" style="font-size: 0.8em;">
+        <p>
+            Transcribing news shows from <a href="https://www.sverigesradio.se/">Sveriges Radio</a> (Radio Sweden), making them searchable and filterable.<br />
+            Using <a href="https://azure.microsoft.com/en-us/services/cognitive-services/" target="_blank">Azure Cognitive Services</a> to transcribe and enrich the episodes.<br />
+            Developed by <a href="https://twitter.com/PeterOrneholm" target="_blank">@@PeterOrneholm</a> as a demo for the session <a href="http://bit.ly/peterorneholm-democratizing-ai">Democratizing AI with Azure Cognitive Services</a>.
+        </p>
+    </div>
+</header>
+
 <div>
-    <h1>NewsSearch</h1>
 
     @foreach (var episode in Model)
     {
@@ -12,11 +23,11 @@
             <div style="background: url('@episode.EpisodeImageUrl') no-repeat center; background-size: cover; height: 250px;" class="card-img-top"></div>
             <div class="card-body">
                 <h3 class="card-title">@episode.EpisodeTitle</h3>
-                
+
                 <p class="card-text"><small class="text-muted">@episode.PublishDateUtc.ToLongDateString() - @episode.ProgramName</small></p>
 
                 <p class="card-text"><strong>Description:</strong> @episode.EpisodeDescription</p>
-                
+
                 <iframe class="mx-y" width="100%" height="150" src="https://sverigesradio.se/embed/episode/@episode.EpisodeId" frameborder="0"></iframe>
 
                 <details class="card-text my-1">
@@ -24,11 +35,11 @@
 
                     @episode.OriginalDisplayTranscription
                 </details>
-                
+
                 <p class="card-text">
                     <strong>Sentiment:</strong> @episode.TranscriptionSentiment?.ToString("P")
                 </p>
-                
+
                 <p class="card-text">
                     <strong>Keyphrases:</strong>
                     @foreach (var tag in episode.TranscriptionKeyPhrases)
@@ -36,7 +47,7 @@
                         <a href="?keyphrase=@Uri.EscapeDataString(tag)" class="badge badge-pill badge-primary">@tag</a>
                     }
                 </p>
-                
+
                 <p class="card-text">
                     <strong>Enteties:</strong>
                     @foreach (var tag in episode.TranscriptionEntities)
