@@ -5,6 +5,7 @@ using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Orneholm.NewsSearch.Web.Models;
 
 namespace Orneholm.NewsSearch.Web
 {
@@ -23,8 +24,11 @@ namespace Orneholm.NewsSearch.Web
             {
                 services.AddTransient<CloudBlobClient>(x => storageAccount.CreateCloudBlobClient());
             }
+            services.Configure<GoogleAnalyticsOptions>(Configuration);
+
 
             services.AddControllersWithViews();
+            services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

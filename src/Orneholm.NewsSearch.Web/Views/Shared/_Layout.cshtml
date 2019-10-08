@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Options
+@using Orneholm.NewsSearch.Web.Models
+@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@inject IOptions<GoogleAnalyticsOptions> GoogleAnalyticsOptions
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,6 +14,18 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-zrnmn8R8KkWl12rAZFt4yKjxplaDaT7/EUkKm7AovijfrQItFWR7O/JJn4DAa/gx" crossorigin="anonymous" />
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@(GoogleAnalyticsOptions.Value.GoogleAnalyticsKey)"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '@GoogleAnalyticsOptions.Value.GoogleAnalyticsKey');
+    </script>
+
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
     <div class="container">
