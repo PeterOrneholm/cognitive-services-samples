@@ -17,7 +17,7 @@ namespace Orneholm.NewsSearch.Web.Controllers
             _cloudBlobClient = cloudBlobClient;
         }
 
-        public async Task<IActionResult> Index(string entityName = null, string entityType = null)
+        public async Task<IActionResult> Index(string entityName = null, string entityType = null, string keyphrase = null)
         {
             var blobContainer = _cloudBlobClient.GetContainerReference("newsmediaepisodes");
 
@@ -33,11 +33,19 @@ namespace Orneholm.NewsSearch.Web.Controllers
             if (!string.IsNullOrWhiteSpace(entityName))
             {
                 filtered = filtered
-                    .Where(x => x.TranscriptionEntities.Any(y => y.Name == entityName && y.Type == entityType))
+                    .Where(x => x.TranscriptionEntities.Any(y => y.Name == entityName && (string.IsNullOrWhiteSpace(entityType) || y.Type == entityType)))
                     .ToList();
             }
 
-            var ordered = filtered.Take(100).OrderByDescending(x => x.PublishDateUtc);
+            if (!string.IsNullOrWhiteSpace(keyphrase))
+            {
+                filtered = filtered
+                    .Where(x => x.TranscriptionKeyPhrases.Contains(keyphrase))
+                    .ToList();
+            }
+
+
+            var ordered = filtered.OrderByDescending(x => x.PublishDateUtc).Take(50);
 
             return View(ordered.ToList());
         }

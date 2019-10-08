@@ -42,11 +42,11 @@ namespace Faces
                 Endpoint = faceEndpoint
             };
 
-            await DetectFaces(persons, faceClient);
+            //await DetectFaces(persons, faceClient);
 
             //await TrainFaces(persons, faceClient);
 
-            //await IdentifyFace(faceClient);
+            await IdentifyFace(faceClient);
 
             Console.ReadLine();
         }
@@ -117,7 +117,7 @@ namespace Faces
         {
             while (true)
             {
-                Console.WriteLine($"Identify speaker in URL:");
+                Console.WriteLine($"Identify person in URL:");
                 var url = Console.ReadLine();
 
                 await IdentifyFace(url, faceClient);
@@ -198,6 +198,7 @@ namespace Faces
         public DetectedFace Face { get; set; }
     }
 
+    // https://www.riksdagen.se/sv/ledamoter-partier/
 
     // https://www.devsum.se/speakers/
     // JSON.stringify($$(".speakers__person").map(x => { return { name: x.querySelector('.speakers__name').innerHTML, image: x.querySelector('.speakers__photo').style.backgroundImage.substring(5).slice(0, -2) }}))

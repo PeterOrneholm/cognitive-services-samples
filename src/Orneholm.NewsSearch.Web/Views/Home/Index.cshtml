@@ -33,7 +33,7 @@
                     <strong>Keyphrases:</strong>
                     @foreach (var tag in episode.TranscriptionKeyPhrases)
                     {
-                        <span class="badge badge-pill badge-info">@tag</span>
+                        <a href="?keyphrase=@Uri.EscapeDataString(tag)" class="badge badge-pill badge-primary">@tag</a>
                     }
                 </p>
                 
@@ -41,7 +41,7 @@
                     <strong>Enteties:</strong>
                     @foreach (var tag in episode.TranscriptionEntities)
                     {
-                        <a href="?entityName=@tag.Name&entityType=@tag.Type" class="badge badge-pill badge-info">@tag.Name (@tag.Type)</a>
+                        <a href="?entityName=@Uri.EscapeDataString(tag.Name)&entityType=@Uri.EscapeDataString(tag.Type)" class="badge badge-pill badge-info">@tag.Name (@tag.Type)</a>
                     }
                 </p>
 
