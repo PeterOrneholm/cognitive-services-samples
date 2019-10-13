@@ -11,11 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Speech", "src\Speech\Speech
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{B9DB5263-C4E0-41E5-BC2A-502609142377}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orneholm.BirdOrNot", "src\Orneholm.BirdOrNot\Orneholm.BirdOrNot.csproj", "{E423F870-3C32-4B46-B781-2573046115A2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orneholm.NewsSearch", "src\Orneholm.NewsSearch\Orneholm.NewsSearch.csproj", "{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orneholm.NewsSearch.Web", "src\Orneholm.NewsSearch.Web\Orneholm.NewsSearch.Web.csproj", "{F99D9A6A-DE2B-4AF3-8254-709DBAE29A54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orneholm.NewsSearch.Web", "src\Orneholm.NewsSearch.Web\Orneholm.NewsSearch.Web.csproj", "{F99D9A6A-DE2B-4AF3-8254-709DBAE29A54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +37,6 @@ Global
 		{B9DB5263-C4E0-41E5-BC2A-502609142377}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9DB5263-C4E0-41E5-BC2A-502609142377}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9DB5263-C4E0-41E5-BC2A-502609142377}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E423F870-3C32-4B46-B781-2573046115A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E423F870-3C32-4B46-B781-2573046115A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E423F870-3C32-4B46-B781-2573046115A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E423F870-3C32-4B46-B781-2573046115A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Release|Any CPU.ActiveCfg = Release|Any CPU
