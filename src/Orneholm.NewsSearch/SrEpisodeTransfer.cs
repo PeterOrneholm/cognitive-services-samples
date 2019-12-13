@@ -39,12 +39,15 @@ namespace Orneholm.NewsSearch
 
             foreach (var episode in srEpisodes)
             {
-                var fileUrl = episode?.Broadcast?.Broadcastfiles.FirstOrDefault()?.Url;
-                fileUrl ??= episode?.Downloadpodfile.Url;
+                var fileUrl = GetFileUrl(episode);
 
                 if (fileUrl != null)
                 {
                     var finalUri = await GetUriAfterOneRedirect(fileUrl);
+                    if (finalUri.Host == "")
+                    {
+                        finalUri = new Uri((new Uri(fileUrl)).Host + finalUri);
+                    }
                     var finalUrl = finalUri.ToString();
                     var extension = finalUrl.Substring(finalUrl.LastIndexOf('.') + 1);
 
@@ -77,6 +80,13 @@ namespace Orneholm.NewsSearch
             return transferedEpisodes;
         }
 
+        private static string GetFileUrl(Episode episode)
+        {
+            var fileUrl = episode?.Downloadpodfile?.Url;
+            fileUrl ??= episode?.Broadcast?.Broadcastfiles.FirstOrDefault()?.Url;
+            return fileUrl;
+        }
+
         private async Task<List<Episode>> GetSrEpisodes(int programId, int count)
         {
             var httpResult = await _httpClient.GetAsync($"http://api.sr.se/api/v2/episodes/index?programid={programId}&urltemplateid=3&audioquality=hi&format=json&size={count}");
@@ -107,7 +117,7 @@ namespace Orneholm.NewsSearch
                 { "NS_Episode_Id", episode.Id.ToString() },
                 { "NS_Episode_WebUrl", episode.Url },
                 { "NS_Episode_ImageUrl", episode.ImageUrl },
-                { "NS_Episode_AudioUrl", episode.Downloadpodfile?.Url },
+                { "NS_Episode_AudioUrl", GetFileUrl(episode) },
                 { "NS_Episode_Title_B64", GetBase64Encoded(episode.Title) },
                 { "NS_Episode_Description_B64", GetBase64Encoded(episode.Description) },
                 { "NS_Episode_PublishDateUtc", episode.PublishDateUtc.ToString("yyyy-MM-dd HH:mm") },

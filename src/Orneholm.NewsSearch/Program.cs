@@ -8,9 +8,9 @@ namespace Orneholm.NewsSearch
 {
     public class Program
     {
-        private const int SrProgramId = 2054;
+        private const int SrProgramId = 4540;
         private const int EpisodesCount = 10;
-        private const string EpisodesLocale = "en-US";
+        private const string EpisodesLocale = "sv-SE";
 
         private const string StorageConnectionString = SecretKeys.NewsSearchStorageConnectionString;
         private static string StorageMediaContainerName = "newsmedia";

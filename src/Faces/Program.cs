@@ -120,7 +120,14 @@ namespace Faces
                 Console.WriteLine($"Identify person in URL:");
                 var url = Console.ReadLine();
 
-                await IdentifyFace(url, faceClient);
+                try
+                {
+                    await IdentifyFace(url, faceClient);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Couldn't handle image.");
+                }
 
                 Console.WriteLine("");
             }

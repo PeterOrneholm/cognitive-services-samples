@@ -17,7 +17,7 @@ namespace Orneholm.NewsSearch.BatchClient
                 {"PunctuationMode", "DictatedAndAutomatic"},
                 {"ProfanityFilterMode", "None"},
                 {"AddWordLevelTimestamps", "True"},
-                {"AddSentiment", "True"}
+                {"AddSentiment", "False"}
             };
         }
 
