@@ -25,6 +25,7 @@ namespace Orneholm.NewsSearch.Web
                 services.AddTransient<CloudBlobClient>(x => storageAccount.CreateCloudBlobClient());
             }
             services.Configure<GoogleAnalyticsOptions>(Configuration);
+            services.Configure<ImmersiveReaderOptions>(Configuration);
 
 
             services.AddControllersWithViews();
