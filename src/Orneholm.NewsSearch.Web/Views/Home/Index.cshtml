@@ -15,7 +15,7 @@
     </div>
 </header>
 
-<div>
+<div style="max-width: 600px; margin: 0 auto;">
 
     @foreach (var episode in Model)
     {
@@ -36,24 +36,24 @@
                     @episode.OriginalDisplayTranscription
                 </details>
 
-                <p class="card-text">
-                    <strong>Sentiment:</strong> @episode.TranscriptionSentiment?.ToString("P")
-                </p>
-
-                <p class="card-text">
-                    <strong>Keyphrases:</strong>
+                <details class="card-text my-1">
+                    <summary class="font-weight-bold">Keyphrases</summary>
                     @foreach (var tag in episode.TranscriptionKeyPhrases)
                     {
                         <a href="?keyphrase=@Uri.EscapeDataString(tag)" class="badge badge-pill badge-primary">@tag</a>
                     }
-                </p>
+                </details>
 
-                <p class="card-text">
-                    <strong>Enteties:</strong>
+                <details class="card-text my-1">
+                    <summary class="font-weight-bold">Enteties</summary>
                     @foreach (var tag in episode.TranscriptionEntities)
                     {
                         <a href="?entityName=@Uri.EscapeDataString(tag.Name)&entityType=@Uri.EscapeDataString(tag.Type)" class="badge badge-pill badge-info">@tag.Name (@tag.Type)</a>
                     }
+                </details>
+
+                <p class="card-text">
+                    <strong>Sentiment:</strong> @episode.TranscriptionSentiment?.ToString("P")
                 </p>
 
                 <a href="@episode.EpisodeWebUrl" class="btn btn-primary" style="width: 100%;">Read full article</a>
@@ -68,9 +68,9 @@
         window.launchImmersiveReader = function (title, text) {
             var content = {
                 title: title,
-                chunks: [ {
+                chunks: [{
                     content: text
-                } ]
+                }]
             };
             window.ImmersiveReader.launchAsync('', '', content);
         }

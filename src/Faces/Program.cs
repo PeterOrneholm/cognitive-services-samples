@@ -35,6 +35,9 @@ namespace Faces
 
         public static async Task Main(string[] args)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.BackgroundColor = ConsoleColor.Black;
+
             var persons = JsonConvert.DeserializeObject<List<Speaker>>(jsonRiksdag);
 
             var faceClient = new FaceClient(new ApiKeyServiceClientCredentials(subscriptionKey))
