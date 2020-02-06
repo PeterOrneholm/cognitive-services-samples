@@ -11,10 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Speech", "src\Speech\Speech
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{B9DB5263-C4E0-41E5-BC2A-502609142377}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orneholm.NewsSearch", "src\Orneholm.NewsSearch\Orneholm.NewsSearch.csproj", "{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orneholm.NewsSearch.Web", "src\Orneholm.NewsSearch.Web\Orneholm.NewsSearch.Web.csproj", "{F99D9A6A-DE2B-4AF3-8254-709DBAE29A54}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Personalizer", "src\Personalizer\Personalizer.csproj", "{F51C5DA1-439B-4FEA-87C0-CA36D2B029A8}"
 EndProject
 Global
@@ -39,14 +35,6 @@ Global
 		{B9DB5263-C4E0-41E5-BC2A-502609142377}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9DB5263-C4E0-41E5-BC2A-502609142377}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9DB5263-C4E0-41E5-BC2A-502609142377}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EA0FC1E-EAC9-4DB9-AA51-FBA0B18AA464}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F99D9A6A-DE2B-4AF3-8254-709DBAE29A54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F99D9A6A-DE2B-4AF3-8254-709DBAE29A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F99D9A6A-DE2B-4AF3-8254-709DBAE29A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F99D9A6A-DE2B-4AF3-8254-709DBAE29A54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F51C5DA1-439B-4FEA-87C0-CA36D2B029A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F51C5DA1-439B-4FEA-87C0-CA36D2B029A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F51C5DA1-439B-4FEA-87C0-CA36D2B029A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
