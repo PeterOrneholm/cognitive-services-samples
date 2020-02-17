@@ -1,0 +1,15 @@
+﻿/* Basic */
+
+html, body {
+    font-size: 18px;
+    position: relative;
+    min-height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}

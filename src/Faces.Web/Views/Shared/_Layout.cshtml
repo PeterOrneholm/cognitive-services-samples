@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <base href="/" />
+
+    <!-- CREDITS -->
+    <!--
+
+    This site is created and maintained by Peter Örneholm.
+
+    https://twitter.com/PeterOrneholm
+    https://peter.orneholm.com/
+
+    Source available at GitHub:
+    https://github.com/PeterOrneholm/cognitive-services-samples
+
+    -->
+    <!-- Meta -->
+    <meta name="author" content="Peter Örneholm (@("@PeterOrneholm"))" />
+
+    <!-- Webapp -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-light">
+    <!-- Body -->
+    @RenderBody()
+
+    <footer class="text-center text-secondary">
+        Developed by Peter Örneholm &copy; 2020
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

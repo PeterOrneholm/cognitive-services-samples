@@ -1,0 +1,51 @@
+﻿@model HomeIndexViewModel
+
+<div class="container text-center py-5">
+    <div>
+        <h1>Azure Cognitive Services Demo</h1>
+        <h2>Face detection - Swedish Parlament</h2>
+    </div>
+
+    <form class="my-5">
+        <div class="input-group">
+            <input type="url" class="form-control" placeholder="URL to picture (JPEG, PNG, GIF, or BMP)" asp-for="@Model.ImageUrl" name="imageUrl" />
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <span class="bon-form-submit-text">Analyze</span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.IsAnalyzed)
+    {
+        <h2>Result</h2>
+
+        <p>
+            Found @Model.IdentifiedFaces.Count(x => x.Person != null) persons from Swedish parlament.
+        </p>
+
+        @if (Model.IdentifiedFaces.Any(x => x.Person != null))
+        {
+            <p>
+                <ul class="list-unstyled">
+                    @foreach (var face in @Model.IdentifiedFaces.Where(x => x.Person != null))
+                    {
+                        <li><strong>@face.Person?.Name</strong> (@face.Confidence.ToString("P2") confidence)</li>
+                    }
+                </ul>
+            </p>
+        }
+
+        @if (Model.IdentifiedFaces.Any(x => x.Person == null))
+        {
+            <p>
+                Found @Model.IdentifiedFaces.Count(x => x.Person == null) unidentified persons.
+            </p>
+        }
+
+        <h2>Original image</h2>
+
+        <img src="@Model.ImageUrl" class="img-fluid img-thumbnail" />
+    }
+</div>
