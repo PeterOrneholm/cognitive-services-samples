@@ -56,11 +56,8 @@ namespace Faces.Web.Controllers
                     var candidateId = candidate.PersonId;
                     var person = await _faceClient.PersonGroupPerson.GetAsync(PersonGroupId, candidateId);
 
-                    if (candidate.Confidence > 0.75)
-                    {
-                        identifiedFace.Person = person;
-                        identifiedFace.Confidence = candidate.Confidence;
-                    }
+                    identifiedFace.Person = person;
+                    identifiedFace.Confidence = candidate.Confidence;
                 }
 
                 result.Add(identifiedFace);
